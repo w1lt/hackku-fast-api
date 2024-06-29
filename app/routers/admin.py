@@ -1,4 +1,3 @@
-# app/routers/admin.py
 import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -97,13 +96,11 @@ async def delete_event(event_id: int, db: AsyncSession = Depends(get_db), curren
     await db.commit()
     return event
 
-
 @router.post("/checkins", response_model=CheckinSchema)
 async def create_checkin(checkin: CheckinCreate, db: AsyncSession = Depends(get_db), current_user: UserSchema = Depends(get_current_admin_user)):
     # Check if the user exists
     user_result = await db.execute(
-        select(User)
-        .filter(User.id == checkin.user_id)
+        select(User).filter(User.id == checkin.user_id)
     )
     user = user_result.scalar_one_or_none()
     
@@ -112,8 +109,7 @@ async def create_checkin(checkin: CheckinCreate, db: AsyncSession = Depends(get_
     
     # Check if the user has already checked in for the event
     existing_checkin_result = await db.execute(
-        select(Checkin)
-        .filter(Checkin.user_id == checkin.user_id, Checkin.event_id == checkin.event_id)
+        select(Checkin).filter(Checkin.user_id == checkin.user_id, Checkin.event_id == checkin.event_id)
     )
     existing_checkin = existing_checkin_result.scalar_one_or_none()
     
@@ -121,10 +117,12 @@ async def create_checkin(checkin: CheckinCreate, db: AsyncSession = Depends(get_
         raise HTTPException(status_code=400, detail="User has already checked in for this event")
     
     # Create a new check-in if it doesn't exist
+    utc_now = datetime.datetime.now(datetime.timezone.utc)
+    naive_utc_now = utc_now.replace(tzinfo=None)
     db_checkin = Checkin(
         user_id=checkin.user_id,
         event_id=checkin.event_id,
-        checkin_time=datetime.datetime.now(datetime.timezone.utc)
+        checkin_time=naive_utc_now  # Ensure naive datetime
     )
     db.add(db_checkin)
     await db.commit()
@@ -140,21 +138,8 @@ async def create_checkin(checkin: CheckinCreate, db: AsyncSession = Depends(get_
 
     return db_checkin
 
-
 @router.get("/get_checkins", response_model=List[CheckinSchema])
 async def read_checkins(db: AsyncSession = Depends(get_db), current_user: UserSchema = Depends(get_current_admin_user)):
     result = await db.execute(select(Checkin).options(selectinload(Checkin.user), selectinload(Checkin.event)))
     checkins = result.scalars().all()
     return checkins
-
-@router.delete("/users/{user_id}", response_model=UserSchema)
-async def delete_user(user_id: int, db: AsyncSession = Depends(get_db), current_user: UserSchema = Depends(get_current_admin_user)):
-    result = await db.execute(select(User).filter(User.id == user_id))
-    db_user = result.scalar_one_or_none()
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    await db.delete(db_user)
-    await db.commit()
-    return db_user
-
-

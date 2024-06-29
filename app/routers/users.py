@@ -38,12 +38,13 @@ async def register_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
     # Hash the password and create the user
     hashed_password = get_password_hash(user.password)
     utc_now = datetime.datetime.now(pytz.utc)  # Ensure UTC timezone
+    naive_utc_now = utc_now.replace(tzinfo=None)  # Convert to naive datetime
     db_user = User(
         username=user.username, 
         email=user.email, 
         hashed_password=hashed_password, 
         role=user.role, 
-        created_on=utc_now
+        created_on=naive_utc_now  # Use naive datetime
     )
     
     db.add(db_user)
