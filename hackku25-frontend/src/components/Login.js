@@ -3,15 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
 import BASE_URL from "../config";
-import {
-  TextInput,
-  PasswordInput,
-  Button,
-  Title,
-  Alert,
-  Space,
-} from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons-react";
+import { TextInput, PasswordInput, Button, Title, Space } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { nprogress } from "@mantine/nprogress";
 import ErrorAlert from "./ErrorAlert";

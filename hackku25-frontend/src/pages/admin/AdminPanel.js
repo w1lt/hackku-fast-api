@@ -1,14 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Container,
-  Title,
-  Group,
-  Button,
-  Card,
-  Text,
-  Center,
-} from "@mantine/core";
+import { Container, Title, Group, Button, Card, Center } from "@mantine/core";
 import { IconUsers, IconCalendarEvent, IconScan } from "@tabler/icons-react";
 
 const AdminPanel = () => {
