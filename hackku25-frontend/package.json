@@ -1,5 +1,5 @@
 {
-  "name": "hackku25-frontent",
+  "name": "hackku25-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -32,9 +32,9 @@
     "web-vitals": "^4.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "node --max_old_space_size=8192 node_modules/react-scripts/scripts/start.js",
+    "build": "node --max_old_space_size=8192 node_modules/react-scripts/scripts/build.js",
+    "test": "node --max_old_space_size=8192 node_modules/react-scripts/scripts/test.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
