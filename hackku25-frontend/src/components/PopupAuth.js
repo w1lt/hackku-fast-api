@@ -8,7 +8,7 @@ const PopupAuth = ({ onSuccess, initialAuth }) => {
   const [loading, setLoading] = useState(false);
   return (
     <>
-      <LoadingOverlay visible={loading} loaderProps={{ type: "dots" }} />
+      <LoadingOverlay visible={loading} />
       {authType === "login" ? (
         <Login onSuccess={onSuccess} setLoading={setLoading} />
       ) : (

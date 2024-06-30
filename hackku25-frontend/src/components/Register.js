@@ -110,6 +110,10 @@ const Register = ({ onSuccess, setLoading }) => {
     }
   };
 
+  const inputStyle = {
+    fontSize: "16px",
+  };
+
   return (
     <>
       <Title align="center">Register</Title>
@@ -118,12 +122,17 @@ const Register = ({ onSuccess, setLoading }) => {
         <TextInput
           label="Username"
           placeholder="Create a username"
+          autoCapitalize="none"
+          style={inputStyle}
           {...form.getInputProps("username")}
           required
         />
         <TextInput
           label="Email"
           placeholder="you@example.com"
+          autoComplete="email"
+          autoCapitalize="none"
+          style={inputStyle}
           {...form.getInputProps("email")}
           required
           mt="md"
@@ -136,6 +145,9 @@ const Register = ({ onSuccess, setLoading }) => {
             setPassword(event.currentTarget.value);
             form.setFieldValue("password", event.currentTarget.value);
           }}
+          autoComplete="new-password"
+          autoCapitalize="none"
+          style={inputStyle}
           required
           mt="md"
         />

@@ -72,6 +72,10 @@ const Login = ({ onSuccess = null, setLoading }) => {
     }
   }, [user, fetchUserData, navigate]);
 
+  const inputStyle = {
+    fontSize: "16px",
+  };
+
   return (
     <>
       <Title align="center">Login</Title>
@@ -80,11 +84,17 @@ const Login = ({ onSuccess = null, setLoading }) => {
         <TextInput
           label="Email"
           placeholder="you@example.com"
+          autoComplete="email"
+          autoCapitalize="none"
+          style={inputStyle}
           {...form.getInputProps("email")}
         />
         <PasswordInput
           label="Password"
           placeholder="Your password"
+          autoComplete="current-password"
+          autoCapitalize="none"
+          style={inputStyle}
           {...form.getInputProps("password")}
           mt="md"
         />
