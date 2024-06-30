@@ -3,15 +3,7 @@ import { Scanner } from "@yudiel/react-qr-scanner";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
 import BASE_URL from "../../config";
-import {
-  Container,
-  Title,
-  Text,
-  Paper,
-  Alert,
-  Center,
-  Select,
-} from "@mantine/core";
+import { Container, Text, Paper, Alert, Center, Select } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 
 const AdminScanner = () => {
@@ -137,9 +129,6 @@ const AdminScanner = () => {
 
   return (
     <Container size="sm" my={40}>
-      <Title align="center" mb="lg">
-        Admin Scanner
-      </Title>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <Select
           label="Select Event"
