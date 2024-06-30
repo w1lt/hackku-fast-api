@@ -18,6 +18,7 @@ const AdminScanner = () => {
   const { user } = useUser();
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState("");
+  const [eventIdMap, setEventIdMap] = useState({});
   const selectedEventRef = useRef("");
   const [scanResult, setScanResult] = useState(null);
   const successSoundRef = useRef(null);
@@ -30,7 +31,15 @@ const AdminScanner = () => {
         const response = await axios.get(`${BASE_URL}/admin/events`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        setEvents(response.data);
+        const eventsData = response.data;
+        setEvents(eventsData);
+
+        const eventIdMapping = {};
+        eventsData.forEach((event) => {
+          eventIdMapping[event.name] = event.id;
+        });
+        setEventIdMap(eventIdMapping);
+        console.log("Fetched events:", eventsData);
       } catch (error) {
         console.error("Error fetching events:", error);
       }
@@ -51,13 +60,25 @@ const AdminScanner = () => {
       console.log("Decoded text:", decodedText);
       setScanResult(decodedText);
       if (decodedText && selectedEventRef.current) {
+        const userId = parseInt(decodedText, 10);
+        const eventId = eventIdMap[selectedEventRef.current];
+        console.log("Parsed user ID:", userId);
+        console.log("Parsed event ID:", eventId);
+
+        if (isNaN(userId) || isNaN(eventId)) {
+          setErrorMessage("Invalid user ID or event ID");
+          return;
+        }
+
         try {
-          await axios.post(
+          const payload = {
+            user_id: userId,
+            event_id: eventId,
+          };
+          console.log("Payload:", payload);
+          const response = await axios.post(
             `${BASE_URL}/admin/checkins`,
-            {
-              user_id: parseInt(decodedText),
-              event_id: parseInt(selectedEventRef.current),
-            },
+            payload,
             { headers: { Authorization: `Bearer ${user.token}` } }
           );
           console.log("Check-in successful for user ID:", decodedText);
@@ -68,8 +89,26 @@ const AdminScanner = () => {
           }
         } catch (error) {
           console.error("Check-in error:", error);
-          if (error.response && error.response.status === 400) {
-            setErrorMessage(error.response.data.detail);
+          if (error.response) {
+            console.log("Error response data:", error.response.data);
+            let errorMessage = "An unexpected error occurred";
+            if (
+              error.response.status === 400 ||
+              error.response.status === 422
+            ) {
+              if (Array.isArray(error.response.data.detail)) {
+                errorMessage = error.response.data.detail
+                  .map((err) => `${err.msg} at ${err.loc.join(" > ")}`)
+                  .join(", ");
+              } else if (typeof error.response.data.detail === "object") {
+                errorMessage = JSON.stringify(error.response.data.detail);
+              } else {
+                errorMessage = error.response.data.detail;
+              }
+            }
+            setErrorMessage(errorMessage);
+          } else {
+            setErrorMessage("An unexpected error occurred");
           }
           if (errorSoundRef.current) {
             errorSoundRef.current.play();
@@ -99,9 +138,9 @@ const AdminScanner = () => {
         <Autocomplete
           label="Select Event"
           placeholder="Select an event"
-          data={events.map((event) => ({
-            value: event.id.toString(),
-            label: event.name,
+          data={Object.keys(eventIdMap).map((eventName) => ({
+            value: eventName,
+            label: eventName,
           }))}
           value={selectedEvent}
           onChange={handleEventChange}
