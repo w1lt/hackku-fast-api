@@ -14,13 +14,7 @@ const PopupAuth = ({ onSuccess, initialAuth }) => {
       ) : (
         <Register onSuccess={onSuccess} setLoading={setLoading} />
       )}
-      <Text
-        align="center"
-        mt="md"
-        style={{
-          color: "grey",
-        }}
-      >
+      <Text align="center" mt="md" c="dimmed">
         {authType === "login"
           ? "Don't have an account?"
           : "Already have an account?"}{" "}

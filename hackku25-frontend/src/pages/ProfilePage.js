@@ -46,19 +46,21 @@ const Profile = () => {
         <Title align="center" mb="lg">
           Your Profile
         </Title>
-        <Text align="center" size="lg">
-          Email: {user.email}
-        </Text>
         <Center my="lg">
           <div>
             <Title order={3} align="center" mb="sm">
-              Your QR Code
+              Profile Identifier
             </Title>
             <Center>
               <Paper withBorder shadow="md" p={10} radius="sm">
-                <QRCode value={user.id.toString()} size={200} />
+                <Center>
+                  <QRCode value={user.id.toString()} size={200} />
+                </Center>
               </Paper>
             </Center>
+            <Text c="dimmed" align="center" mt="sm">
+              Scan to check-in to events
+            </Text>
           </div>
         </Center>
       </Paper>
