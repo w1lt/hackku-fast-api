@@ -20,6 +20,7 @@ import {
   IconLogout,
   IconUser,
   IconUserPlus,
+  IconScan,
 } from "@tabler/icons-react";
 import logout from "../utils/logout"; // Import the logout function
 
@@ -84,17 +85,32 @@ const Nav = () => {
                     Profile
                   </Menu.Item>
                   {user.role === "admin" && (
-                    <Menu.Item
-                      leftSection={
-                        <IconSettings
-                          style={{ width: rem(14), height: rem(14) }}
-                        />
-                      }
-                      component={Link}
-                      to="/admin"
-                    >
-                      Admin Panel
-                    </Menu.Item>
+                    <>
+                      <Menu.Divider />
+                      <Menu.Label>Admin</Menu.Label>
+                      <Menu.Item
+                        leftSection={
+                          <IconSettings
+                            style={{ width: rem(14), height: rem(14) }}
+                          />
+                        }
+                        component={Link}
+                        to="/admin"
+                      >
+                        Admin Panel
+                      </Menu.Item>
+                      <Menu.Item
+                        leftSection={
+                          <IconScan
+                            style={{ width: rem(14), height: rem(14) }}
+                          />
+                        }
+                        component={Link}
+                        to="/admin/scanner"
+                      >
+                        QR Scanner
+                      </Menu.Item>
+                    </>
                   )}
                   <Menu.Divider />
                   <Menu.Item

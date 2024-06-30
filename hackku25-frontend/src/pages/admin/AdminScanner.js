@@ -10,7 +10,7 @@ import {
   Paper,
   Alert,
   Center,
-  Autocomplete,
+  Select,
 } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 
@@ -40,6 +40,12 @@ const AdminScanner = () => {
         });
         setEventIdMap(eventIdMapping);
         console.log("Fetched events:", eventsData);
+
+        // Set the default selected event to the first event
+        if (eventsData.length > 0) {
+          setSelectedEvent(eventsData[0].name);
+          selectedEventRef.current = eventsData[0].name;
+        }
       } catch (error) {
         console.error("Error fetching events:", error);
       }
@@ -135,7 +141,7 @@ const AdminScanner = () => {
         Admin Scanner
       </Title>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <Autocomplete
+        <Select
           label="Select Event"
           placeholder="Select an event"
           data={Object.keys(eventIdMap).map((eventName) => ({
